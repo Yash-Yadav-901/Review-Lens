@@ -1,0 +1,27 @@
+# Dependencies
+node_modules/
+
+# Environment secrets
+.env
+
+# Database files
+*.db
+*.sqlite
+
+# Build output
+dist/
+coverage/
+
+# Project context (AI session files)
+PROJECT_CONTEXT.md
+
+# OS files
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Editor files
+.vscode/
+.idea/
+*.swp
+*.swo

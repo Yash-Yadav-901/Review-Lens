@@ -38,9 +38,13 @@ function request(app, method, path, { rawBody, contentType } = {}) {
     res.headersSent = false;
     res.finished = false;
 
-    res.setHeader = (k, v) => { sentHeaders[k.toLowerCase()] = v; };
+    res.setHeader = (k, v) => {
+      sentHeaders[k.toLowerCase()] = v;
+    };
     res.getHeader = (k) => sentHeaders[k.toLowerCase()];
-    res.removeHeader = (k) => { delete sentHeaders[k.toLowerCase()]; };
+    res.removeHeader = (k) => {
+      delete sentHeaders[k.toLowerCase()];
+    };
 
     // Express sets status via res.status(code) which must return res.
     res.status = (code) => {
@@ -53,11 +57,19 @@ function request(app, method, path, { rawBody, contentType } = {}) {
       res.statusCode = code;
     };
 
-    res.write = (chunk) => { responseBody += chunk; };
+    res.write = (chunk) => {
+      responseBody += chunk;
+    };
     res.end = (chunk) => {
-      if (chunk) { responseBody += chunk; }
+      if (chunk) {
+        responseBody += chunk;
+      }
       let parsed;
-      try { parsed = JSON.parse(responseBody); } catch { parsed = responseBody; }
+      try {
+        parsed = JSON.parse(responseBody);
+      } catch {
+        parsed = responseBody;
+      }
       resolve({ status: statusCode, body: parsed });
     };
     // Express checks res.json — provide it so our ApiResponse.success/error work.
@@ -88,11 +100,21 @@ function mockRes() {
   const state = { statusCode: 200, body: null };
   return {
     // ApiResponse calls res.status(code).json(body)
-    status(code) { state.statusCode = code; return this; },
-    json(b) { state.body = b; return this; },
+    status(code) {
+      state.statusCode = code;
+      return this;
+    },
+    json(b) {
+      state.body = b;
+      return this;
+    },
     // Accessors used by assertions
-    get _status() { return state.statusCode; },
-    get _body() { return state.body; },
+    get _status() {
+      return state.statusCode;
+    },
+    get _body() {
+      return state.body;
+    },
   };
 }
 

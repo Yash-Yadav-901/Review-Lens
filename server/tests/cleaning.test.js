@@ -77,18 +77,28 @@ describe('real reviews.csv', () => {
     assert.ok(r009, 'R009 must be present');
     assert.equal(r009.status, STATUS.VALID);
 
-    // R016 Devanagari text must be preserved unchanged (after NFC normalise)
+    // R016 text equals the original Devanagari string
     const r016 = reviews.find((r) => r.reviewId === 'R016');
     assert.ok(r016, 'R016 must be present');
-    assert.ok(r016.text.includes('\u0906'), 'Devanagari characters must be preserved');
+    assert.equal(
+      r016.text,
+      'आवाज़ अच्छी है लेकिन बैटरी जल्दी खत्म हो जाती है।',
+      'R016 text must match original Devanagari string',
+    );
 
     // R003 sarcasm review must keep its emoji
     const r003 = reviews.find((r) => r.reviewId === 'R003');
     assert.ok(r003, 'R003 must be present');
+    assert.ok(r003.text.includes('🙄'), 'R003 must retain its rolling-eyes emoji');
+
+    // R024 text contains no angle brackets (HTML tags stripped)
+    const r024 = reviews.find((r) => r.reviewId === 'R024');
+    assert.ok(r024, 'R024 must be present');
     assert.ok(
-      r003.text.includes('\uD83D\uDE44') || r003.text.includes('\u{1F644}'),
-      'R003 must retain its rolling-eyes emoji',
+      !r024.text.includes('<') && !r024.text.includes('>'),
+      'R024 must contain no angle brackets',
     );
+    assert.ok(r024.text.startsWith('Love it!'), 'R024 text must have stripped <b> tags');
   });
 });
 

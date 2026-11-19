@@ -7,13 +7,16 @@ describe('validateEnv', () => {
     NODE_ENV: 'test',
     PORT: '3000',
     CORS_ORIGIN: 'http://localhost:5173',
+    GROQ_BASE_URL: 'https://api.groq.com/openai/v1',
     GROQ_MODEL: 'openai/gpt-oss-120b',
     GROQ_REASONING_EFFORT: 'low',
     GROQ_MAX_OUTPUT_TOKENS: '2048',
+    REQUEST_TIMEOUT_MS: '30000',
     DB_PATH: './test.db',
     BATCH_SIZE: '5',
     MAX_RETRIES: '3',
     RETRY_BASE_DELAY_MS: '1000',
+    RETRY_MAX_DELAY_MS: '30000',
     MAX_FILE_SIZE_MB: '5',
     MAX_REVIEWS: '500',
     MAX_REVIEW_CHARS: '1000',
@@ -56,6 +59,25 @@ describe('validateEnv', () => {
     const { GROQ_MAX_OUTPUT_TOKENS, ...rest } = base;
     const cfg = validateEnv(rest);
     assert.equal(cfg.GROQ_MAX_OUTPUT_TOKENS, 2048);
+  });
+
+  it('applies defaults for GROQ_BASE_URL, REQUEST_TIMEOUT_MS, RETRY_MAX_DELAY_MS', () => {
+    // eslint-disable-next-line no-unused-vars
+    const { GROQ_BASE_URL, REQUEST_TIMEOUT_MS, RETRY_MAX_DELAY_MS, ...rest } = base;
+    const cfg = validateEnv(rest);
+    assert.equal(cfg.GROQ_BASE_URL, 'https://api.groq.com/openai/v1');
+    assert.equal(cfg.REQUEST_TIMEOUT_MS, 30000);
+    assert.equal(cfg.RETRY_MAX_DELAY_MS, 30000);
+  });
+
+  it('rejects an invalid GROQ_BASE_URL', () => {
+    assert.throws(
+      () => validateEnv({ ...base, GROQ_BASE_URL: 'not-a-url' }),
+      (err) => {
+        assert.ok(err.message.includes('GROQ_BASE_URL'));
+        return true;
+      },
+    );
   });
 
   it('accepts medium and high for GROQ_REASONING_EFFORT', () => {

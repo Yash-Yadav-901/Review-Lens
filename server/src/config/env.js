@@ -1,10 +1,16 @@
+import { fileURLToPath } from 'node:url';
+import { dirname, resolve } from 'node:path';
 import { createRequire } from 'module';
 import { z } from 'zod';
 
-// dotenv must load before anything else reads process.env
+// Load .env from the repo root (one level above server/).
+// Resolved from this file's location so it works from any working directory.
+const __dirname = dirname(fileURLToPath(import.meta.url));
+const envPath = resolve(__dirname, '../../../.env');
+
 const require = createRequire(import.meta.url);
 const dotenv = require('dotenv');
-dotenv.config();
+dotenv.config({ path: envPath });
 
 // Build the validation schema given the NODE_ENV of the input being validated.
 // GROQ_API_KEY is optional only in test so the test suite runs without a real key.
@@ -19,7 +25,9 @@ function buildSchema(nodeEnv) {
     NODE_ENV: z.enum(['development', 'production', 'test']).default('development'),
     CORS_ORIGIN: z.string().url().default('http://localhost:5173'),
     GROQ_API_KEY: apiKeySchema,
-    GROQ_MODEL: z.string().min(1).default('llama-3.3-70b-versatile'),
+    GROQ_MODEL: z.string().min(1).default('openai/gpt-oss-120b'),
+    GROQ_REASONING_EFFORT: z.enum(['low', 'medium', 'high']).default('low'),
+    GROQ_MAX_OUTPUT_TOKENS: z.coerce.number().int().min(256).max(32768).default(2048),
     DB_PATH: z.string().min(1).default('./reviewlens.db'),
     BATCH_SIZE: z.coerce.number().int().min(1).max(20).default(5),
     MAX_RETRIES: z.coerce.number().int().min(0).max(10).default(3),

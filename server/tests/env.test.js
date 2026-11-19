@@ -7,7 +7,9 @@ describe('validateEnv', () => {
     NODE_ENV: 'test',
     PORT: '3000',
     CORS_ORIGIN: 'http://localhost:5173',
-    GROQ_MODEL: 'llama-3.3-70b-versatile',
+    GROQ_MODEL: 'openai/gpt-oss-120b',
+    GROQ_REASONING_EFFORT: 'low',
+    GROQ_MAX_OUTPUT_TOKENS: '2048',
     DB_PATH: './test.db',
     BATCH_SIZE: '5',
     MAX_RETRIES: '3',
@@ -33,6 +35,52 @@ describe('validateEnv', () => {
     const cfg = validateEnv(rest);
     assert.equal(cfg.PORT, 3000);
     assert.equal(cfg.CORS_ORIGIN, 'http://localhost:5173');
+  });
+
+  it('applies default GROQ_MODEL', () => {
+    // eslint-disable-next-line no-unused-vars
+    const { GROQ_MODEL, ...rest } = base;
+    const cfg = validateEnv(rest);
+    assert.equal(cfg.GROQ_MODEL, 'openai/gpt-oss-120b');
+  });
+
+  it('applies default GROQ_REASONING_EFFORT of low', () => {
+    // eslint-disable-next-line no-unused-vars
+    const { GROQ_REASONING_EFFORT, ...rest } = base;
+    const cfg = validateEnv(rest);
+    assert.equal(cfg.GROQ_REASONING_EFFORT, 'low');
+  });
+
+  it('applies default GROQ_MAX_OUTPUT_TOKENS of 2048', () => {
+    // eslint-disable-next-line no-unused-vars
+    const { GROQ_MAX_OUTPUT_TOKENS, ...rest } = base;
+    const cfg = validateEnv(rest);
+    assert.equal(cfg.GROQ_MAX_OUTPUT_TOKENS, 2048);
+  });
+
+  it('accepts medium and high for GROQ_REASONING_EFFORT', () => {
+    assert.doesNotThrow(() => validateEnv({ ...base, GROQ_REASONING_EFFORT: 'medium' }));
+    assert.doesNotThrow(() => validateEnv({ ...base, GROQ_REASONING_EFFORT: 'high' }));
+  });
+
+  it('rejects GROQ_REASONING_EFFORT outside low, medium, high', () => {
+    assert.throws(
+      () => validateEnv({ ...base, GROQ_REASONING_EFFORT: 'extreme' }),
+      (err) => {
+        assert.ok(err.message.includes('GROQ_REASONING_EFFORT'));
+        return true;
+      },
+    );
+  });
+
+  it('rejects GROQ_MAX_OUTPUT_TOKENS below minimum', () => {
+    assert.throws(
+      () => validateEnv({ ...base, GROQ_MAX_OUTPUT_TOKENS: '10' }),
+      (err) => {
+        assert.ok(err.message.includes('GROQ_MAX_OUTPUT_TOKENS'));
+        return true;
+      },
+    );
   });
 
   it('rejects an invalid PORT', () => {
@@ -86,7 +134,6 @@ describe('validateEnv', () => {
   });
 
   it('allows missing GROQ_API_KEY when NODE_ENV is test', () => {
-    // Should not throw
     const cfg = validateEnv({ ...base, NODE_ENV: 'test' });
     assert.equal(cfg.NODE_ENV, 'test');
   });

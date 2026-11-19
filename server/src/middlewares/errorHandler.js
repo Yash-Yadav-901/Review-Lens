@@ -50,7 +50,11 @@ export function errorHandler(err, req, res, _next) {
 
   if (err instanceof AppError) {
     // Warn on operational errors; they are expected failure paths.
-    logger.warn('Operational error', { code: err.code, status: err.statusCode, message: err.message });
+    logger.warn('Operational error', {
+      code: err.code,
+      status: err.statusCode,
+      message: err.message,
+    });
     return ApiResponse.error(res, {
       statusCode: err.statusCode,
       code: err.code,

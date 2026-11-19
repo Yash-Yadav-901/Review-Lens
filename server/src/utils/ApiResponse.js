@@ -9,7 +9,15 @@ export class ApiResponse {
   }
 
   // Sends a uniform error envelope. Stack traces are never included.
-  static error(res, { statusCode = 500, code = 'INTERNAL_ERROR', message = 'An unexpected error occurred', details = null } = {}) {
+  static error(
+    res,
+    {
+      statusCode = 500,
+      code = 'INTERNAL_ERROR',
+      message = 'An unexpected error occurred',
+      details = null,
+    } = {},
+  ) {
     const body = {
       success: false,
       error: { code, message },

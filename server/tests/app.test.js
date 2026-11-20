@@ -140,6 +140,32 @@ describe('GET /api/unknown', () => {
   });
 });
 
+describe('Static file serving in production mode', () => {
+  it('serves client index.html for non-API routes when serveStatic is enabled', async () => {
+    const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs');
+    const { tmpdir } = await import('node:os');
+    const { join } = await import('node:path');
+
+    const tempDir = mkdtempSync(join(tmpdir(), 'reviewlens-dist-'));
+    writeFileSync(join(tempDir, 'index.html'), '<html><body>ReviewLens Frontend</body></html>');
+
+    try {
+      const app = createApp({
+        serveStatic: true,
+        clientDist: tempDir,
+        reviewsService: { processUpload: async () => {} },
+        replyService: { generateReply: async () => ({ reply: 'ok' }) },
+      });
+
+      const { status, body } = await request(app, 'GET', '/dashboard');
+      assert.equal(status, 200);
+      assert.ok(body.includes('ReviewLens Frontend'));
+    } finally {
+      rmSync(tempDir, { recursive: true, force: true });
+    }
+  });
+});
+
 describe('errorHandler', () => {
   // Test errorHandler directly as a function to avoid route ordering constraints.
 

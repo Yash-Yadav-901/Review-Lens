@@ -7,6 +7,8 @@ node_modules/
 # Database files
 *.db
 *.sqlite
+*.db-wal
+*.db-shm
 
 # Build output
 dist/

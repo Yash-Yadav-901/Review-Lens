@@ -55,29 +55,31 @@ describe('real reviews.csv', () => {
     const r005 = reviews.find((r) => r.reviewId === 'R005');
     assert.ok(r005, 'R005 must be present');
     assert.equal(r005.status, STATUS.SKIPPED_EMPTY);
+  });
 
-    // R015 must be duplicate of R012
+  it('R015 is duplicate and duplicateOf R012', () => {
+    const csv = readFileSync(REVIEWS_CSV_PATH);
+    const { rows } = parseCsv(csv);
+    const { reviews } = cleanReviews(rows, DEFAULT_OPTS);
     const r015 = reviews.find((r) => r.reviewId === 'R015');
     assert.ok(r015, 'R015 must be present');
     assert.equal(r015.status, STATUS.DUPLICATE);
     assert.equal(r015.duplicateOf, 'R012');
+  });
 
-    // R010 must have null rating (missing)
-    const r010 = reviews.find((r) => r.reviewId === 'R010');
-    assert.ok(r010, 'R010 must be present');
-    assert.equal(r010.rating, null);
-
-    // R022 must have null rating (invalid: "five")
-    const r022 = reviews.find((r) => r.reviewId === 'R022');
-    assert.ok(r022, 'R022 must be present');
-    assert.equal(r022.rating, null);
-
-    // R009 emoji-only review must be valid
+  it('R009 emoji-only review has status valid', () => {
+    const csv = readFileSync(REVIEWS_CSV_PATH);
+    const { rows } = parseCsv(csv);
+    const { reviews } = cleanReviews(rows, DEFAULT_OPTS);
     const r009 = reviews.find((r) => r.reviewId === 'R009');
     assert.ok(r009, 'R009 must be present');
     assert.equal(r009.status, STATUS.VALID);
+  });
 
-    // R016 text equals the original Devanagari string
+  it('R016 text equals original Devanagari string', () => {
+    const csv = readFileSync(REVIEWS_CSV_PATH);
+    const { rows } = parseCsv(csv);
+    const { reviews } = cleanReviews(rows, DEFAULT_OPTS);
     const r016 = reviews.find((r) => r.reviewId === 'R016');
     assert.ok(r016, 'R016 must be present');
     assert.equal(
@@ -85,13 +87,21 @@ describe('real reviews.csv', () => {
       'आवाज़ अच्छी है लेकिन बैटरी जल्दी खत्म हो जाती है।',
       'R016 text must match original Devanagari string',
     );
+  });
 
-    // R003 sarcasm review must keep its emoji
+  it('R003 sarcasm review still contains the emoji', () => {
+    const csv = readFileSync(REVIEWS_CSV_PATH);
+    const { rows } = parseCsv(csv);
+    const { reviews } = cleanReviews(rows, DEFAULT_OPTS);
     const r003 = reviews.find((r) => r.reviewId === 'R003');
     assert.ok(r003, 'R003 must be present');
     assert.ok(r003.text.includes('🙄'), 'R003 must retain its rolling-eyes emoji');
+  });
 
-    // R024 text contains no angle brackets (HTML tags stripped)
+  it('R024 text contains no angle brackets', () => {
+    const csv = readFileSync(REVIEWS_CSV_PATH);
+    const { rows } = parseCsv(csv);
+    const { reviews } = cleanReviews(rows, DEFAULT_OPTS);
     const r024 = reviews.find((r) => r.reviewId === 'R024');
     assert.ok(r024, 'R024 must be present');
     assert.ok(
@@ -99,6 +109,24 @@ describe('real reviews.csv', () => {
       'R024 must contain no angle brackets',
     );
     assert.ok(r024.text.startsWith('Love it!'), 'R024 text must have stripped <b> tags');
+  });
+
+  it('R010 rating is null', () => {
+    const csv = readFileSync(REVIEWS_CSV_PATH);
+    const { rows } = parseCsv(csv);
+    const { reviews } = cleanReviews(rows, DEFAULT_OPTS);
+    const r010 = reviews.find((r) => r.reviewId === 'R010');
+    assert.ok(r010, 'R010 must be present');
+    assert.equal(r010.rating, null);
+  });
+
+  it('R022 rating is null', () => {
+    const csv = readFileSync(REVIEWS_CSV_PATH);
+    const { rows } = parseCsv(csv);
+    const { reviews } = cleanReviews(rows, DEFAULT_OPTS);
+    const r022 = reviews.find((r) => r.reviewId === 'R022');
+    assert.ok(r022, 'R022 must be present');
+    assert.equal(r022.rating, null);
   });
 });
 

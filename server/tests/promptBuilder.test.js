@@ -9,6 +9,23 @@ import {
 } from '../src/modules/analysis/promptBuilder.js';
 
 describe('promptBuilder', () => {
+  const sampleReviews = [
+    {
+      reviewId: 'R001',
+      product: 'Ceramic Mug',
+      rating: 5,
+      date: '2026-01-01',
+      text: 'Great mug!',
+    },
+    {
+      reviewId: 'R002',
+      product: 'Wooden Chair',
+      rating: 1,
+      date: '2026-01-02',
+      text: 'Broken leg.',
+    },
+  ];
+
   it('exports PROMPT_VERSION as string', () => {
     assert.equal(typeof PROMPT_VERSION, 'string');
     assert.equal(PROMPT_VERSION, 'v1');
@@ -22,43 +39,35 @@ describe('promptBuilder', () => {
   });
 
   it('buildAnalysisMessages returns system and user properties', () => {
-    const reviews = [
-      {
-        reviewId: 'R001',
-        product: 'Mug',
-        rating: 5,
-        date: '2026-01-01',
-        text: 'Great mug!',
-      },
-      {
-        reviewId: 'R002',
-        product: 'Chair',
-        rating: 1,
-        date: '2026-01-02',
-        text: 'Broken leg.',
-      },
-    ];
-
-    const messages = buildAnalysisMessages(reviews);
+    const messages = buildAnalysisMessages(sampleReviews);
+    assert.equal(typeof messages.system, 'string');
+    assert.equal(typeof messages.user, 'string');
     assert.equal(messages.system, SYSTEM_PROMPT);
+  });
 
-    // System prompt must never contain review texts
+  it('system message contains none of the review text', () => {
+    const messages = buildAnalysisMessages(sampleReviews);
     assert.ok(!messages.system.includes('Great mug!'));
     assert.ok(!messages.system.includes('Broken leg.'));
+  });
 
-    // User message parses back to exact { index, text } array
-    const parsedUser = JSON.parse(messages.user);
-    assert.deepEqual(parsedUser, [
-      { index: 0, text: 'Great mug!' },
-      { index: 1, text: 'Broken leg.' },
-    ]);
-
-    // Product, rating, reviewId, and date must NOT be present in user message
-    assert.ok(!messages.user.includes('Mug'));
-    assert.ok(!messages.user.includes('Chair'));
+  it('rating, product, review id and date never appear in the user message', () => {
+    const messages = buildAnalysisMessages(sampleReviews);
+    assert.ok(!messages.user.includes('Ceramic Mug'));
+    assert.ok(!messages.user.includes('Wooden Chair'));
     assert.ok(!messages.user.includes('R001'));
     assert.ok(!messages.user.includes('R002'));
     assert.ok(!messages.user.includes('2026-01-01'));
+    assert.ok(!messages.user.includes('2026-01-02'));
+  });
+
+  it('user message parses back to the exact { index, text } array', () => {
+    const messages = buildAnalysisMessages(sampleReviews);
+    const parsed = JSON.parse(messages.user);
+    assert.deepEqual(parsed, [
+      { index: 0, text: 'Great mug!' },
+      { index: 1, text: 'Broken leg.' },
+    ]);
   });
 
   it('keeps injection-style text strictly inside the JSON user payload', () => {

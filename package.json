@@ -9,7 +9,8 @@
     "test": "npm --prefix server run test",
     "lint": "npm --prefix server run lint",
     "format": "npm --prefix server run format",
-    "format:check": "npm --prefix server run format:check"
+    "format:check": "npm --prefix server run format:check",
+    "live-check": "npm --prefix server run live-check"
   },
   "engines": {
     "node": ">=20"

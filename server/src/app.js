@@ -7,8 +7,10 @@ import { notFound } from './middlewares/notFound.js';
 import { errorHandler } from './middlewares/errorHandler.js';
 import { ApiResponse } from './utils/ApiResponse.js';
 import asyncHandler from './utils/asyncHandler.js';
+import { createContainer } from './container.js';
+import { createReviewsRouter } from './modules/reviews/reviews.routes.js';
 
-export function createApp() {
+export function createApp(deps = {}) {
   const app = express();
 
   app.use(helmet());
@@ -30,6 +32,20 @@ export function createApp() {
           timestamp: new Date().toISOString(),
         },
       });
+    }),
+  );
+
+  const container = deps.reviewsService && deps.replyService ? null : createContainer(deps);
+  const reviewsService = deps.reviewsService ?? container.reviewsService;
+  const replyService = deps.replyService ?? container.replyService;
+
+  app.use(
+    '/api/reviews',
+    createReviewsRouter({
+      reviewsService,
+      replyService,
+      upload: deps.upload,
+      replyLimiter: deps.replyLimiter,
     }),
   );
 

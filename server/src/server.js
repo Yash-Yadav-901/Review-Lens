@@ -1,8 +1,13 @@
 import { createApp } from './app.js';
 import { config } from './config/env.js';
 import { logger } from './utils/logger.js';
+import { createContainer } from './container.js';
 
-const app = createApp();
+const container = createContainer();
+const app = createApp({
+  reviewsService: container.reviewsService,
+  replyService: container.replyService,
+});
 
 const server = app.listen(config.PORT, () => {
   logger.info('Server started', { port: config.PORT, env: config.NODE_ENV });
@@ -11,6 +16,7 @@ const server = app.listen(config.PORT, () => {
 function shutdown(signal) {
   logger.info('Shutdown signal received', { signal });
   server.close(() => {
+    container.close();
     logger.info('HTTP server closed');
     process.exit(0);
   });

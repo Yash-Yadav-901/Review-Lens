@@ -12,15 +12,18 @@
     "test": "node --import ./tests/setup.js --test",
     "lint": "eslint src tests",
     "format": "prettier --write src tests",
-    "format:check": "prettier --check src tests"
+    "format:check": "prettier --check src tests",
+    "live-check": "node scripts/liveCheck.js"
   },
   "dependencies": {
+    "better-sqlite3": "^11.8.1",
     "cors": "^2.8.5",
     "csv-parse": "^5.5.6",
     "dotenv": "^16.4.5",
     "express": "^4.19.2",
     "express-rate-limit": "^7.3.1",
     "helmet": "^7.1.0",
+    "multer": "^2.5.0",
     "zod": "^3.23.8"
   },
   "devDependencies": {

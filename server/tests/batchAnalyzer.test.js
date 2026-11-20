@@ -45,6 +45,7 @@ describe('batchAnalyzer', () => {
     assert.deepEqual(batchSizes, [5, 5, 2]);
     assert.equal(metrics.aiCalls, 3);
     assert.equal(metrics.batches, 3);
+    assert.equal(metrics.retries, 0);
     assert.equal(metrics.failed, 0);
     assert.equal(results.length, 12);
     assert.equal(results[0].status, 'analyzed');
@@ -273,6 +274,9 @@ describe('batchAnalyzer', () => {
     assert.equal(results[0].status, 'analysis_failed');
     assert.equal(results[0].reason, 'llm unavailable');
     assert.equal(results[1].status, 'analyzed');
+    assert.equal(metrics.aiCalls, 2);
+    assert.equal(metrics.batches, 2);
+    assert.equal(metrics.retries, 0);
     assert.equal(metrics.failed, 1);
   });
 

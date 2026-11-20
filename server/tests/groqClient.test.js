@@ -312,4 +312,117 @@ describe('createGroqClient', () => {
     );
     assert.equal(callCount, 1);
   });
+
+  it('fails fast without retry on 400 with LLM_BAD_REQUEST', async () => {
+    let callCount = 0;
+    const mockFetch = async () => {
+      callCount++;
+      return { ok: false, status: 400, headers: { get: () => null } };
+    };
+
+    const client = createGroqClient({
+      config: dummyConfig,
+      fetchFn: mockFetch,
+      sleep: async () => {},
+    });
+
+    await assert.rejects(
+      async () => client.chat({ system: 's', user: 'u' }),
+      (err) => {
+        assert.ok(err instanceof ExternalServiceError);
+        assert.equal(err.details?.code, 'LLM_BAD_REQUEST');
+        assert.equal(err.details?.retryable, false);
+        assert.equal(err.details?.statusCode, 400);
+        return true;
+      },
+    );
+    assert.equal(callCount, 1);
+  });
+
+  it('throws LLM_BAD_RESPONSE on 200 with unusable body shape', async () => {
+    const mockFetch = async () => ({
+      ok: true,
+      json: async () => ({ unexpected: 'shape', choices: [] }),
+    });
+
+    const client = createGroqClient({
+      config: dummyConfig,
+      fetchFn: mockFetch,
+      sleep: async () => {},
+    });
+
+    await assert.rejects(
+      async () => client.chat({ system: 's', user: 'u' }),
+      (err) => {
+        assert.ok(err instanceof ExternalServiceError);
+        assert.equal(err.details?.code, 'LLM_BAD_RESPONSE');
+        assert.equal(err.details?.retryable, false);
+        return true;
+      },
+    );
+  });
+
+  it('handles request timeout and maps to retryable LLM_UNAVAILABLE', async () => {
+    let callCount = 0;
+    const mockFetch = async () => {
+      callCount++;
+      const err = new Error('The operation was aborted due to timeout');
+      err.name = 'TimeoutError';
+      throw err;
+    };
+
+    const client = createGroqClient({
+      config: dummyConfig,
+      fetchFn: mockFetch,
+      sleep: async () => {},
+    });
+
+    await assert.rejects(
+      async () => client.chat({ system: 's', user: 'u' }),
+      (err) => {
+        assert.ok(err instanceof ExternalServiceError);
+        assert.equal(err.details?.code, 'LLM_UNAVAILABLE');
+        assert.equal(err.details?.retryable, true);
+        return true;
+      },
+    );
+    assert.equal(callCount, dummyConfig.MAX_RETRIES + 1);
+  });
+
+  it('never exposes API key in thrown error, details, or logs', async () => {
+    const loggedMessages = [];
+    const mockLogger = {
+      warn: (msg, data) => loggedMessages.push({ msg, data }),
+      info: (msg, data) => loggedMessages.push({ msg, data }),
+      error: (msg, data) => loggedMessages.push({ msg, data }),
+    };
+
+    const mockFetch = async () => ({
+      ok: false,
+      status: 401,
+      headers: { get: () => null },
+    });
+
+    const client = createGroqClient({
+      config: dummyConfig,
+      fetchFn: mockFetch,
+      sleep: async () => {},
+      logger: mockLogger,
+    });
+
+    try {
+      await client.chat({ system: 's', user: 'u' });
+      assert.fail('Should have thrown');
+    } catch (err) {
+      const errStr = JSON.stringify(err, Object.getOwnPropertyNames(err));
+      assert.ok(!errStr.includes('test_secret_key'), 'API key must not appear in error');
+      assert.ok(!err.message.includes('test_secret_key'));
+      if (err.details) {
+        assert.ok(!JSON.stringify(err.details).includes('test_secret_key'));
+      }
+    }
+
+    const logStr = JSON.stringify(loggedMessages);
+    assert.ok(!logStr.includes('test_secret_key'), 'API key must not appear in logs');
+  });
 });

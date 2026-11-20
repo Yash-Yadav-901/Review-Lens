@@ -4,15 +4,28 @@
   "version": "0.1.0",
   "description": "AI-powered product review insights",
   "scripts": {
-    "dev": "npm --prefix server run dev",
-    "start": "npm --prefix server run start",
-    "test": "npm --prefix server run test",
-    "lint": "npm --prefix server run lint",
-    "format": "npm --prefix server run format",
-    "format:check": "npm --prefix server run format:check",
+    "dev": "concurrently -n server,client -c blue,green \"npm --prefix server run dev\" \"npm --prefix client run dev\"",
+    "build:client": "npm --prefix client run build",
+    "build": "npm run build:client",
+    "start": "npm run build:client && npm --prefix server run start",
+    "test:server": "npm --prefix server run test",
+    "test:client": "npm --prefix client run test",
+    "test": "npm run test:server && npm run test:client",
+    "lint:server": "npm --prefix server run lint",
+    "lint:client": "npm --prefix client run lint",
+    "lint": "npm run lint:server && npm run lint:client",
+    "format:server": "npm --prefix server run format",
+    "format:client": "npm --prefix client run format",
+    "format": "npm run format:server && npm run format:client",
+    "format:check:server": "npm --prefix server run format:check",
+    "format:check:client": "npm --prefix client run format:check",
+    "format:check": "npm run format:check:server && npm run format:check:client",
     "live-check": "npm --prefix server run live-check"
   },
   "engines": {
     "node": ">=20"
+  },
+  "devDependencies": {
+    "concurrently": "^10.0.7"
   }
 }

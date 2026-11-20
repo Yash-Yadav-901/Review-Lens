@@ -1,6 +1,5 @@
 import React, { useState, useRef } from 'react';
-
-const MAX_FILE_SIZE_BYTES = 5 * 1024 * 1024; // 5 MB
+import { MAX_FILE_SIZE_MB, MAX_FILE_SIZE_BYTES } from '../constants.js';
 
 export default function UploadPanel({ onUpload, isLoading }) {
   const [dragOver, setDragOver] = useState(false);
@@ -17,7 +16,7 @@ export default function UploadPanel({ onUpload, isLoading }) {
     }
 
     if (file.size > MAX_FILE_SIZE_BYTES) {
-      setClientError('File exceeds maximum allowed size of 5 MB.');
+      setClientError(`File exceeds maximum allowed size of ${MAX_FILE_SIZE_MB} MB.`);
       return;
     }
 

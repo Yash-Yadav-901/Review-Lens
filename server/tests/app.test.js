@@ -141,13 +141,15 @@ describe('GET /api/unknown', () => {
 });
 
 describe('Static file serving in production mode', () => {
-  it('serves client index.html for non-API routes when serveStatic is enabled', async () => {
-    const { mkdtempSync, writeFileSync, rmSync } = await import('node:fs');
+  it('serves index.html for GET /, client routes, assets, and 404 for /api/unknown', async () => {
+    const { mkdtempSync, mkdirSync, writeFileSync, rmSync } = await import('node:fs');
     const { tmpdir } = await import('node:os');
     const { join } = await import('node:path');
 
     const tempDir = mkdtempSync(join(tmpdir(), 'reviewlens-dist-'));
     writeFileSync(join(tempDir, 'index.html'), '<html><body>ReviewLens Frontend</body></html>');
+    mkdirSync(join(tempDir, 'assets'), { recursive: true });
+    writeFileSync(join(tempDir, 'assets/style.css'), 'body { background: #fff; }');
 
     try {
       const app = createApp({
@@ -157,9 +159,36 @@ describe('Static file serving in production mode', () => {
         replyService: { generateReply: async () => ({ reply: 'ok' }) },
       });
 
-      const { status, body } = await request(app, 'GET', '/dashboard');
-      assert.equal(status, 200);
-      assert.ok(body.includes('ReviewLens Frontend'));
+      // 1. GET / returns index.html
+      const rootRes = await request(app, 'GET', '/');
+      assert.equal(rootRes.status, 200);
+      assert.ok(
+        typeof rootRes.body === 'string' && rootRes.body.includes('ReviewLens Frontend'),
+        'GET / must return index.html',
+      );
+
+      // 2. GET /some/client/route returns index.html
+      const clientRouteRes = await request(app, 'GET', '/some/client/route');
+      assert.equal(clientRouteRes.status, 200);
+      assert.ok(
+        typeof clientRouteRes.body === 'string' &&
+          clientRouteRes.body.includes('ReviewLens Frontend'),
+        'GET /some/client/route must return index.html',
+      );
+
+      // 3. Real asset path returns the asset
+      const assetRes = await request(app, 'GET', '/assets/style.css');
+      assert.equal(assetRes.status, 200);
+      assert.ok(
+        typeof assetRes.body === 'string' && assetRes.body.includes('body { background: #fff; }'),
+        'Real asset path must return the asset content',
+      );
+
+      // 4. GET /api/unknown returns JSON 404 error envelope
+      const apiNotFoundRes = await request(app, 'GET', '/api/unknown');
+      assert.equal(apiNotFoundRes.status, 404);
+      assert.equal(apiNotFoundRes.body.success, false);
+      assert.equal(apiNotFoundRes.body.error.code, 'NOT_FOUND');
     } finally {
       rmSync(tempDir, { recursive: true, force: true });
     }

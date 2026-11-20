@@ -60,7 +60,10 @@ export function createApp(deps = {}) {
   const isProduction = config.NODE_ENV === 'production' || deps.serveStatic;
   if (isProduction && existsSync(clientDist)) {
     app.use(express.static(clientDist));
-    app.get('*', (req, res, next) => {
+    app.use((req, res, next) => {
+      if (req.method !== 'GET' && req.method !== 'HEAD') {
+        return next();
+      }
       if (req.path.startsWith('/api')) {
         return next();
       }

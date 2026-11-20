@@ -21,14 +21,14 @@ describe('cache - computeCacheKey', () => {
     const { createHash } = await import('node:crypto');
     const { normalizeText } = await import('../src/modules/cleaning/reviewCleaner.js');
     const text = 'Stable review text';
-    const keyV1 = computeCacheKey(text);
+    const currentKey = computeCacheKey(text);
 
     // Compute key with an alternate version
-    const keyV2 = createHash('sha256')
-      .update(`v2\n${normalizeText(text)}`, 'utf8')
+    const altKey = createHash('sha256')
+      .update(`v_alt\n${normalizeText(text)}`, 'utf8')
       .digest('hex');
 
-    assert.notEqual(keyV1, keyV2);
+    assert.notEqual(currentKey, altKey);
   });
 });
 

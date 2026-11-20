@@ -28,7 +28,7 @@ describe('promptBuilder', () => {
 
   it('exports PROMPT_VERSION as string', () => {
     assert.equal(typeof PROMPT_VERSION, 'string');
-    assert.equal(PROMPT_VERSION, 'v1');
+    assert.equal(PROMPT_VERSION, 'v2');
   });
 
   it('SYSTEM_PROMPT is immutable and identical across accesses', () => {

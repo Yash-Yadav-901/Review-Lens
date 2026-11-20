@@ -21,6 +21,7 @@ describe('validateEnv', () => {
     MAX_REVIEWS: '500',
     MAX_REVIEW_CHARS: '1000',
     RATE_LIMIT_PER_MINUTE: '60',
+    REPLY_RATE_LIMIT_PER_MINUTE: '10',
   };
 
   it('accepts valid config and coerces numbers', () => {
@@ -103,6 +104,13 @@ describe('validateEnv', () => {
         return true;
       },
     );
+  });
+
+  it('applies default for REPLY_RATE_LIMIT_PER_MINUTE of 10', () => {
+    // eslint-disable-next-line no-unused-vars
+    const { REPLY_RATE_LIMIT_PER_MINUTE, ...rest } = base;
+    const cfg = validateEnv(rest);
+    assert.equal(cfg.REPLY_RATE_LIMIT_PER_MINUTE, 10);
   });
 
   it('rejects an invalid PORT', () => {

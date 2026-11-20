@@ -39,6 +39,7 @@ function buildSchema(nodeEnv) {
     MAX_REVIEWS: z.coerce.number().int().min(1).default(500),
     MAX_REVIEW_CHARS: z.coerce.number().int().min(50).default(1000),
     RATE_LIMIT_PER_MINUTE: z.coerce.number().int().min(1).default(60),
+    REPLY_RATE_LIMIT_PER_MINUTE: z.coerce.number().int().min(1).default(10),
   });
 }
 

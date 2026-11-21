@@ -96,14 +96,29 @@ The server reads its configuration from a `.env` file located in the repository 
 
 ## 4. Screenshots
 
-![Dashboard Overview](docs/screenshots/01-dashboard.png)
-Dashboard Overview: Summary metric cards, top complaints and praises, product breakdown, and pipeline telemetry.
+![Upload Screen](docs/screenshots/01-upload-screen.png)
+Upload Screen: Drag-and-drop CSV upload zone with file validation rules and browse picker.
 
-![Filterable Review Table](docs/screenshots/02-review-table.png)
-Filterable Review Table: Reviews filtered by sentiment, topic, or status with rating mismatch badges.
+![Dashboard Overview](docs/screenshots/02-dashboard-overview.png)
+Dashboard Overview: Summary metric cards, sentiment distribution, and top complaints and praises.
 
-![Suggested Customer Reply Drawer](docs/screenshots/03-suggested-reply.png)
-Suggested Customer Reply Drawer: Inline empathetic customer response generation with one-click clipboard copy.
+![Product Breakdown](docs/screenshots/03-product-breakdown.png)
+Product Breakdown: Per-product sentiment counts and prioritized negative topic drivers.
+
+![Filterable Review Table](docs/screenshots/04-review-table.png)
+Filterable Review Table: Categorized reviews with multi-dimensional filters, topic badges, and rating mismatch flags.
+
+![Suggested Customer Reply](docs/screenshots/05-suggested-reply.png)
+Suggested Customer Reply: Inline AI response generation with one-click clipboard copy for customer service teams.
+
+![Rating vs Sentiment Agreement](docs/screenshots/06-rating-mismatches.png)
+Rating vs. Sentiment Agreement: Contextual mismatch detection highlighting reviews whose star ratings diverge from textual sentiment.
+
+![Pipeline Metrics - Initial Upload (Cache Miss)](docs/screenshots/07-pipeline-metrics-miss.png)
+Pipeline Telemetry (Initial Run): Model batch calls, cache misses, and pipeline execution time.
+
+![Pipeline Metrics - Duplicate Upload (Cache Hit)](docs/screenshots/08-pipeline-metrics-cache-hit.png)
+Pipeline Telemetry (Second Run): 100% cache hits retrieved from SQLite with 0 AI calls and sub-second execution (4ms).
 
 ---
 

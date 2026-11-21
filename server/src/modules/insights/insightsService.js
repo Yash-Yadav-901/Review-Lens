@@ -136,6 +136,7 @@ export function computeInsights(enrichedReviews) {
     const expectedSentiment = ratingToSentiment(review.rating);
     if (expectedSentiment !== review.analysis.sentiment) {
       mismatches.push({
+        rowNumber: review.rowNumber,
         reviewId: review.reviewId,
         rating: review.rating,
         sentiment: review.analysis.sentiment,

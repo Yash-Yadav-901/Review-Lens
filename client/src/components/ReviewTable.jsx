@@ -202,7 +202,7 @@ export default function ReviewTable({ reviews = [] }) {
             ) : (
               filteredReviews.map((r) => {
                 const isMismatch = isRatingMismatch(r);
-                const isExpanded = expandedTextIds.has(r.reviewId);
+                const isExpanded = expandedTextIds.has(r.rowNumber ?? r.reviewId);
                 const isLongText = (r.text || '').length > TRUNCATE_PREVIEW_CHARS;
                 const displayText =
                   isLongText && !isExpanded
@@ -211,7 +211,7 @@ export default function ReviewTable({ reviews = [] }) {
 
                 return (
                   <tr
-                    key={r.reviewId}
+                    key={r.rowNumber ?? r.reviewId}
                     className={`hover:bg-gray-50/80 transition ${
                       r.status === 'duplicate' || r.status === 'skipped_empty'
                         ? 'bg-gray-50/40 text-gray-400'

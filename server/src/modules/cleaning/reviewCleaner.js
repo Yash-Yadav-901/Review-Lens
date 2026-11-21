@@ -174,8 +174,9 @@ export function cleanReviews(rows, { maxReviews, maxReviewChars }) {
 
   // Track seen review_ids for duplicate-id detection (separate from text deduplication).
   const seenReviewIds = new Set();
-  // Track normalized texts for content deduplication. Maps normalized -> first reviewId.
+  // Track normalized texts for content deduplication. Maps normalized -> first reviewId and first rowNumber.
   const seenNormalizedTexts = new Map();
+  const seenNormalizedRowNumbers = new Map();
 
   // Counters for the report.
   let missingRating = 0;
@@ -184,8 +185,9 @@ export function cleanReviews(rows, { maxReviews, maxReviewChars }) {
   let skippedEmpty = 0;
   let duplicates = 0;
 
-  for (const row of rows) {
-    const rowNumber = row._rowNumber;
+  for (let idx = 0; idx < rows.length; idx++) {
+    const row = rows[idx];
+    const rowNumber = row._rowNumber ?? idx + 1;
 
     // --- review_id ---
     let reviewId = (row.review_id ?? '').trim();
@@ -244,6 +246,7 @@ export function cleanReviews(rows, { maxReviews, maxReviewChars }) {
     // --- status determination ---
     let status = STATUS.VALID;
     let duplicateOf = null;
+    let duplicateOfRow = null;
 
     if (!finalText) {
       status = STATUS.SKIPPED_EMPTY;
@@ -254,6 +257,7 @@ export function cleanReviews(rows, { maxReviews, maxReviewChars }) {
       if (seenNormalizedTexts.has(normalized)) {
         status = STATUS.DUPLICATE;
         duplicateOf = seenNormalizedTexts.get(normalized);
+        duplicateOfRow = seenNormalizedRowNumbers.get(normalized);
         duplicates++;
         issues.push({
           row: rowNumber,
@@ -263,10 +267,12 @@ export function cleanReviews(rows, { maxReviews, maxReviewChars }) {
         });
       } else {
         seenNormalizedTexts.set(normalized, reviewId);
+        seenNormalizedRowNumbers.set(normalized, rowNumber);
       }
     }
 
     reviews.push({
+      rowNumber,
       reviewId,
       product,
       rating,
@@ -274,6 +280,7 @@ export function cleanReviews(rows, { maxReviews, maxReviewChars }) {
       text: finalText,
       status,
       duplicateOf,
+      duplicateOfRow,
       flags: { truncated },
     });
   }

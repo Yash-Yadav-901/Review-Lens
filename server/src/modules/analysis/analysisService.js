@@ -34,10 +34,10 @@ export function createAnalysisService({ cacheRepository, batchAnalyzer, logger, 
 
     const validReviews = reviews.filter((r) => r.status === 'valid');
 
-    // Compute cache keys for all valid reviews
-    const keyMap = new Map();
+    // Compute cache keys for all valid reviews (keyed by review object reference)
+    const reviewKeyMap = new Map();
     for (const review of validReviews) {
-      keyMap.set(review.reviewId, computeCacheKey(review.text));
+      reviewKeyMap.set(review, computeCacheKey(review.text));
     }
 
     // Attempt to fetch cache hits
@@ -46,7 +46,7 @@ export function createAnalysisService({ cacheRepository, batchAnalyzer, logger, 
 
     if (cacheRepository) {
       try {
-        const keys = Array.from(keyMap.values());
+        const keys = validReviews.map((r) => reviewKeyMap.get(r));
         cacheHitMap = cacheRepository.getMany(keys);
       } catch (cacheErr) {
         cacheAvailable = false;
@@ -59,7 +59,7 @@ export function createAnalysisService({ cacheRepository, batchAnalyzer, logger, 
     // Separate hits from misses
     const missReviews = [];
     for (const review of validReviews) {
-      const key = keyMap.get(review.reviewId);
+      const key = reviewKeyMap.get(review);
       if (!cacheHitMap.has(key)) {
         missReviews.push(review);
       }
@@ -75,15 +75,14 @@ export function createAnalysisService({ cacheRepository, batchAnalyzer, logger, 
       analyzerMetrics = outcome.metrics;
     }
 
-    // Write new successes back to the cache
+    // Write new successes back to the cache (matched by array position)
     if (cacheAvailable && cacheRepository && analyzerResults.length > 0) {
       const toStore = [];
-      for (const result of analyzerResults) {
-        if (result.status === ANALYSIS_STATUS.ANALYZED) {
-          const review = missReviews.find((r) => r.reviewId === result.reviewId);
-          if (review) {
-            toStore.push({ key: keyMap.get(review.reviewId), analysis: result.analysis });
-          }
+      for (let idx = 0; idx < analyzerResults.length; idx++) {
+        const result = analyzerResults[idx];
+        const review = missReviews[idx];
+        if (result && result.status === ANALYSIS_STATUS.ANALYZED && review) {
+          toStore.push({ key: reviewKeyMap.get(review), analysis: result.analysis });
         }
       }
       if (toStore.length > 0) {
@@ -97,10 +96,12 @@ export function createAnalysisService({ cacheRepository, batchAnalyzer, logger, 
       }
     }
 
-    // Build a lookup from reviewId to analyzer result
-    const analyzerResultMap = new Map();
-    for (const result of analyzerResults) {
-      analyzerResultMap.set(result.reviewId, result);
+    // Map analyzer results back to reviews by array position
+    const resultByReview = new Map();
+    for (let idx = 0; idx < analyzerResults.length; idx++) {
+      if (missReviews[idx]) {
+        resultByReview.set(missReviews[idx], analyzerResults[idx]);
+      }
     }
 
     // Assemble the final enriched review list
@@ -115,7 +116,7 @@ export function createAnalysisService({ cacheRepository, batchAnalyzer, logger, 
         };
       }
 
-      const key = keyMap.get(review.reviewId);
+      const key = reviewKeyMap.get(review);
       const cached = cacheHitMap.get(key);
 
       if (cached) {
@@ -128,7 +129,7 @@ export function createAnalysisService({ cacheRepository, batchAnalyzer, logger, 
         };
       }
 
-      const result = analyzerResultMap.get(review.reviewId);
+      const result = resultByReview.get(review);
       if (!result) {
         // Should not happen, but guard anyway
         return {

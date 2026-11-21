@@ -50,6 +50,7 @@ export function createBatchAnalyzer({ client, batchSize = 5, logger }) {
           // Retryable error that exhausted all retries
           for (let b = 0; b < batchReviews.length; b++) {
             results[i + b] = {
+              rowNumber: batchReviews[b].rowNumber,
               reviewId: batchReviews[b].reviewId,
               status: 'analysis_failed',
               reason: 'llm unavailable',
@@ -94,6 +95,7 @@ export function createBatchAnalyzer({ client, batchSize = 5, logger }) {
       // Record successful primary items
       for (const p of passingIndices) {
         results[i + p.batchPos] = {
+          rowNumber: batchReviews[p.batchPos].rowNumber,
           reviewId: batchReviews[p.batchPos].reviewId,
           status: 'analyzed',
           analysis: p.analysis,
@@ -116,6 +118,7 @@ export function createBatchAnalyzer({ client, batchSize = 5, logger }) {
         if (reaskRes.finishReason === 'length') {
           for (const f of failingIndices) {
             results[i + f.batchPos] = {
+              rowNumber: batchReviews[f.batchPos].rowNumber,
               reviewId: batchReviews[f.batchPos].reviewId,
               status: 'analysis_failed',
               reason: 'finish_reason length',
@@ -131,12 +134,14 @@ export function createBatchAnalyzer({ client, batchSize = 5, logger }) {
             const v = reaskValidation[r];
             if (v && v.ok) {
               results[i + f.batchPos] = {
+                rowNumber: batchReviews[f.batchPos].rowNumber,
                 reviewId: batchReviews[f.batchPos].reviewId,
                 status: 'analyzed',
                 analysis: v.analysis,
               };
             } else {
               results[i + f.batchPos] = {
+                rowNumber: batchReviews[f.batchPos].rowNumber,
                 reviewId: batchReviews[f.batchPos].reviewId,
                 status: 'analysis_failed',
                 reason: v?.reason || 're-ask validation failed',
@@ -155,6 +160,7 @@ export function createBatchAnalyzer({ client, batchSize = 5, logger }) {
 
         for (const f of failingIndices) {
           results[i + f.batchPos] = {
+            rowNumber: batchReviews[f.batchPos].rowNumber,
             reviewId: batchReviews[f.batchPos].reviewId,
             status: 'analysis_failed',
             reason,

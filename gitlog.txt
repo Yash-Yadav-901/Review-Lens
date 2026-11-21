@@ -1,0 +1,221 @@
+commit 7c84dd0fe656c62a6dbc19f841e21cd51dcf74d6
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 23:45:12 +0530
+
+    chore: remove empty file
+
+commit b9e75ce8bbadcef38b3507a4fefcbc1b8cb7972c
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 23:27:01 +0530
+
+    docs: add application screenshots and update README documentation
+
+commit 31242c136927b554e7ed5f2ce19ad5007fbd9c90
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 22:54:54 +0530
+
+    feat: add vercel configuration for api route rewrites
+
+commit c4e14b18ee632cc0864ada87f6287a0b6781a51b
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 22:32:12 +0530
+
+    feat: add review table, mismatch list components, and related tests
+
+commit ac856cdcd280124a0322eaf75863026f754931a7
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 20:38:24 +0530
+
+    feat: add review analysis, cleaning, insights services, and review table component
+
+commit 5317958625b183e108d1184aba51d477c3a141a8
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 19:50:42 +0530
+
+    docs: update README with API response and processing behavior details
+
+commit e3ba6b13c665864692bd1967d6435b505b653ba7
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 00:17:43 +0530
+
+    docs: add comprehensive documentation and project overview to README
+
+commit f580e1a76ad1de8689c6acda68281e512f0548aa
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-21 00:09:16 +0530
+
+    feat: add analysis prompt builder and cache tests
+
+commit 230041c95c5ca2266de12794fe3e11ab18ffae4d
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 11:38:54 +0530
+
+    feat: add file upload component, express app setup, constants, and server tests
+
+commit 7dde01e4876b7cd2713322cdd50ad11f0e029c69
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 11:24:44 +0530
+
+    feat(client): implement upload panel, summary cards, review table, and inline reply drawer
+
+commit 7146d5ad457ba9ea3d06dd8a5e97d88ecc865682
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 11:24:43 +0530
+
+    feat(client): add typed api client, review filtering, formatting utilities, and tests
+
+commit 49ee0709850aba889f45660352d05d38186d7146
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 11:24:42 +0530
+
+    feat(client): scaffold vite react dashboard with tailwind, proxy, and static serving
+
+commit 65e0f5b37fdcdc7d018c07f99baf2d734b79a67b
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 11:24:42 +0530
+
+    feat(server): implement sqlite cache, upload pipeline, reply endpoint, and complete test suites
+
+commit 7465563ef28843eb9d3a999144f85528086bea1a
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 10:30:58 +0530
+
+    feat(app): wire container dependencies, add live check script and npm scripts
+
+commit 71438e12eefca198b377b27dd0c5c7d7394748b7
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 10:30:58 +0530
+
+    feat(reply): add POST /api/reviews/reply endpoint with dedicated rate limiting and reply service
+
+commit 9c7400429460e1df19954bf11f3f71c60086f124
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 10:30:58 +0530
+
+    test(coverage): restore full test suite coverage and dedicated dataset assertions
+
+commit 1717444f8054d0d0a14350876c687f1945d23863
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 10:30:58 +0530
+
+    feat(upload): add csv upload pipeline with multer validation and http endpoint
+
+commit 77d338a5c2182f6056a13b31a05365c6bb0097da
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 10:30:57 +0530
+
+    feat(insights): implement cache-aware analysis service and pure insights engine
+
+commit 0db25e166a905a995628b675092262a215277c2b
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 10:30:57 +0530
+
+    feat(cache): implement sqlite cache repository with query chunking and WAL mode
+
+commit e88c7e65621049b502bce94d7bc95d1e6e413e7d
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-20 10:30:57 +0530
+
+    test(analysis): fill phase 3 test gaps for groqClient and batchAnalyzer
+
+commit caae5cfc33df033960ecf2c2121c1e80b78cc229
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 14:37:27 +0530
+
+    feat(analysis): add Groq client with backoff and sequential batch analyzer
+
+commit c5ec94f3eefcde2997755bcd72e8e4da11862846
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 14:37:26 +0530
+
+    feat(analysis): add analysis schema validation and prompt builder
+
+commit ba0604712a4b9cd725043751713bbd0ccf0f9771
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 14:37:26 +0530
+
+    feat(config): add Groq timeout, base URL and retry max delay settings
+
+commit 06268c82d9516e01d67b86dbcd94ba7c8268d76b
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 14:01:57 +0530
+
+    feat: add initial product reviews dataset and server dependencies lockfile
+
+commit d01125b1cdf57822570843849856386208ab7c20
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:59:23 +0530
+
+    test: add CSV parsing and cleaning unit and integration tests
+
+commit c63ce78370872c8ab8c3ae34dc23a5ab8abaa82f
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:59:21 +0530
+
+    feat: add CSV parsing and review data cleaning modules
+
+commit 6f0a3d12ee797e07a5f45db91a3206ba34ecbad9
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:59:19 +0530
+
+    fix: resolve root .env, setup cross-platform test script and Groq config
+
+commit 2f4e729f8f5ed4d32f44fbed3234c889b97ae522
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:09:45 +0530
+
+    first commit
+
+commit 648c9aef548d13264c9ac722a790171c3860b3de
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:09:02 +0530
+
+    chore: add package-lock.json files for root and server dependencies
+
+commit 9a9c18f1cd09b3ac941d7a55c53b419e44a7a56d
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:08:46 +0530
+
+    test: add phase 1 test suite (30 tests, all passing)
+
+commit 75f1e391b474e1fd047daa72e33fb38acace7570
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:08:44 +0530
+
+    chore: add ESLint flat config and Prettier
+
+commit ff40e9ceb4d560df13a2ce47e6e0aa64c85ef7e1
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:08:44 +0530
+
+    feat: wire up Express app and graceful server startup
+
+commit 3bfd23c98a4608e0cf9f38e77e12424b375d6b43
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:08:44 +0530
+
+    feat: add error handler, not-found, and rate-limiter middleware
+
+commit 96b30192bbc8d2e632f1a6ef5b0948795e8c528f
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:08:44 +0530
+
+    feat: add AppError hierarchy and ApiResponse/asyncHandler/logger utils
+
+commit 20a4324ce63eb65c1d53ed9baf4ed9ae55c54798
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:08:44 +0530
+
+    feat: add zod-validated config with fail-fast startup
+
+commit 99fe814dfbae127b52ba23ef7a4c2b62d488aeda
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 13:08:44 +0530
+
+    feat: scaffold project structure, root and server package.json
+
+commit 895d0aa33df6d1f0ced9b9279686fa244d2b960e
+Author: Yash-Yadav-901 <yashyadav65378@gmail.com>
+Date:   2026-11-19 02:23:48 +0530
+
+    first commit

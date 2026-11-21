@@ -219,3 +219,27 @@ describe('filterReviews', () => {
     assert.equal(res.length, 0);
   });
 });
+
+describe('row identity and key logic', () => {
+  it('uses rowNumber to uniquely identify rows even when reviewId is duplicated', () => {
+    const rowsWithDuplicateIds = [
+      { rowNumber: 1, reviewId: 'N01', text: 'First review text' },
+      { rowNumber: 2, reviewId: 'N01', text: 'Second review text' },
+    ];
+
+    // Using reviewId produces collisions (size 1)
+    const reviewIdKeys = new Set(rowsWithDuplicateIds.map((r) => r.reviewId));
+    assert.equal(reviewIdKeys.size, 1);
+
+    // Using rowNumber guarantees unique keys (size 2)
+    const rowNumberKeys = new Set(rowsWithDuplicateIds.map((r) => r.rowNumber ?? r.reviewId));
+    assert.equal(rowNumberKeys.size, 2);
+
+    // Simulating toggling expanded state by rowNumber
+    const expandedRowNumbers = new Set();
+    expandedRowNumbers.add(rowsWithDuplicateIds[0].rowNumber);
+
+    assert.equal(expandedRowNumbers.has(rowsWithDuplicateIds[0].rowNumber), true);
+    assert.equal(expandedRowNumbers.has(rowsWithDuplicateIds[1].rowNumber), false);
+  });
+});

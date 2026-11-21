@@ -295,7 +295,7 @@ export default function ReviewTable({ reviews = [] }) {
                         {isLongText && (
                           <button
                             type="button"
-                            onClick={() => toggleExpandText(r.reviewId)}
+                            onClick={() => toggleExpandText(r.rowNumber ?? r.reviewId)}
                             className="ml-1 text-blue-600 hover:text-blue-800 text-[11px] underline font-medium"
                           >
                             {isExpanded ? 'Show less' : 'Read more'}
@@ -307,6 +307,7 @@ export default function ReviewTable({ reviews = [] }) {
                       {r.duplicateOf && (
                         <div className="text-[11px] text-gray-400 mt-1 italic">
                           Duplicate of {r.duplicateOf}
+                          {r.duplicateOfRow ? ` (Row ${r.duplicateOfRow})` : ''}
                         </div>
                       )}
 

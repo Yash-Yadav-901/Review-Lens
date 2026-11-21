@@ -55,7 +55,7 @@ export default function MismatchList({ ratingAgreement }) {
                 const expected =
                   m.rating <= 2 ? 'Negative' : m.rating === 3 ? 'Neutral' : 'Positive';
                 return (
-                  <tr key={m.reviewId} className="hover:bg-gray-50 transition">
+                  <tr key={m.rowNumber ?? m.reviewId} className="hover:bg-gray-50 transition">
                     <td className="px-3 py-2 font-mono font-medium text-gray-900">{m.reviewId}</td>
                     <td className="px-3 py-2 text-center font-bold text-gray-800">{m.rating}</td>
                     <td className="px-3 py-2 font-semibold">

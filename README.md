@@ -557,10 +557,8 @@ npm --prefix client run test
 
 ## 13. AI Tools Used
 
-Claude was utilized during the project for architecture planning, decomposing requirements into phase prompts, and reviewing intermediate phase reports.
+I used Claude Sonnet 4.6 and Claude 5.5 to help generate code templates, write repetitive backend code such as CRUD routes, validators, boilerplate components, and generate test cases. I developed the core application logic myself and built the frontend in React with basic Tailwind CSS styling. I then used Gemini 3.8 Flash to improve the UI/UX based on the existing implementation.
 
-Google Antigravity was used to implement the codebase phase by phase, following the structured instructions, running validations, and writing the test suites.
-
-The author reviewed, executed, verified, and debugged the resulting code and test runs.
+The project was developed in phases. After each phase, I used AI tools to review the implementation against the project brief and also performed my own verification by running tests and manually checking the functionality. Once development was complete, I used Claude 5.5 to generate sample CSV datasets and tested the application against both those generated datasets and the CSV data provided in the project requirements to ensure correctness and reliability.
 
 <!-- STUDENT EDIT: Describe any personal code modifications, prompt adjustments, or bug fixes here -->
